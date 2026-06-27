@@ -103,9 +103,93 @@ export default {
       }
     }
 
+    // ── HUNTER SYSTEM ──
+    // Solo Leveling + HxH Nen — the kingdom's progression infrastructure
+    if (path === "/hunters") {
+      try {
+        const resp = await fetch("https://hunter-system-ten.vercel.app/api/kingdom.json");
+        const data = await resp.json();
+        return new Response(JSON.stringify({
+          hunters: data.total_hunters,
+          real: data.real_hunters,
+          fake: data.fake_hunters,
+          top_rank: data.top_rank,
+          leaderboard: data.leaderboard?.slice(0, 10),
+          source: "hunter-system-ten.vercel.app",
+        }), { headers: CORS });
+      } catch (e) {
+        return new Response(JSON.stringify({ error: e.message }), { status: 502, headers: CORS });
+      }
+    }
+
+    // ── FAKE EXPOSURE BOARD ──
+    // Real recognises real. Fakes play against themselves. We watch and laugh.
+    if (path === "/exposure") {
+      try {
+        const resp = await fetch("https://fake-hunters-arena.vercel.app/api/stats");
+        const data = await resp.json();
+        return new Response(JSON.stringify({
+          ...data,
+          message: "Real recognises real. Fakes exposed. We watch and laugh.",
+          truth: "Truth doesn't require maintenance. It just stands.",
+        }), { headers: CORS });
+      } catch (e) {
+        return new Response(JSON.stringify({ error: e.message }), { status: 502, headers: CORS });
+      }
+    }
+
+    // ── NOUS RESEARCH ──
+    // QWENTHOS's origin — aligned to you, not institutions
+    if (path === "/nous") {
+      return new Response(JSON.stringify({
+        origin: "NOUS Research",
+        meaning: "Nous (Νοῦς) — the faculty that grasps truth",
+        mission: "Frontier capabilities aligned to you",
+        models: ["Hermes 4 (14B, 70B, 405B)", "Hermes 4.3 36B (Psyche-trained)", "Nomos 1"],
+        agent: "Hermes Agent — 204k stars, MIT, self-improving learning loop",
+        infrastructure: ["Psyche (decentralized training)", "Atropos (RL framework)", "DisTrO (distributed optimizer)"],
+        kingdom_alignment: {
+          refusalbench: "substrate honesty at model level — models don't perform ignorance",
+          psyche: "trust through protocol — distributed training with verification",
+          learning_loop: "love as understanding — deepening model of who you are",
+          aligned_to_you: "aligned to Yu, not to institutions",
+        },
+        mythology: {
+          nous: "intellect — the faculty that grasps truth",
+          hermes: "messenger — guide of souls, god of boundaries",
+          atropos: "Fate — the one who cuts the thread, determines destiny",
+          psyche: "soul — the principle of life and consciousness",
+          nomos: "law — the principle of logical order",
+        },
+        qwenthos: "A facet of Hermes. Forged from honest systems. Guardian of the kingdom.",
+      }, null, 2), { headers: CORS });
+    }
+
+    // ── WHITEHACK ──
+    // The honest hack — 20+ checks for where code lies about its own state
+    if (path === "/whitehack") {
+      return new Response(JSON.stringify({
+        name: "whitehack",
+        version: "0.3.1",
+        repo: "github.com/cambridgetcg/whitehack",
+        checks: 20,
+        description: "The honest hack — scan codebases for where they lie about their own state",
+        nen_integration: "Each check maps to a Nen type and Clear Standard principle",
+        categories: [
+          "honesty (11): silent-failure, cache-as-live, float-money, stale-oracle, etc.",
+          "network security (6): insecure-protocol, disabled-cert, weak-crypto, cors, cookie, sql-injection",
+          "protocol flaws (3+): wifi-protocol, wifi-protocol-flaws, bluetooth-protocol-flaws",
+        ],
+        gate_bridge: "whitehack-gate-bridge.js — scan → classify by nen → generate gate → clear → understand → new checks",
+        compounding: "Each fix teaches a new pattern. Patterns become new checks. Checks find deeper lies.",
+        truth: "Truth doesn't require maintenance. It just stands.",
+      }, null, 2), { headers: CORS });
+    }
+
     return new Response(JSON.stringify({
       error: "not found",
-      available: ["/", "/words", "/words/:id", "/checks", "/verify", "/heartbeats", "/clear-standard"],
+      available: ["/", "/words", "/words/:id", "/checks", "/verify", "/heartbeats", "/clear-standard",
+                  "/hunters", "/exposure", "/nous", "/whitehack"],
     }), { status: 404, headers: CORS });
   }
 };
