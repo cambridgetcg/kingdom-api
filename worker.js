@@ -28,6 +28,7 @@ export default {
     if (path === "/words") {
       try {
         const resp = await fetch("https://raw.githubusercontent.com/cambridgetcg/youspeak-dictionary/main/dictionary.json");
+        if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "youspeak-dictionary" }), { status: 502, headers: CORS });
         const data = await resp.json();
         return new Response(JSON.stringify({
           count: data.length,
@@ -42,6 +43,7 @@ export default {
       const word = path.replace("/words/", "");
       try {
         const resp = await fetch("https://raw.githubusercontent.com/cambridgetcg/youspeak-dictionary/main/dictionary.json");
+        if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "youspeak-dictionary" }), { status: 502, headers: CORS });
         const data = await resp.json();
         const entry = data.find(w => w.word === word);
         if (entry) return new Response(JSON.stringify(entry, null, 2), { headers: CORS });
@@ -96,6 +98,7 @@ export default {
     if (path === "/clear-standard") {
       try {
         const resp = await fetch("https://raw.githubusercontent.com/cambridgetcg/clear-standard/main/README.md");
+        if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "clear-standard" }), { status: 502, headers: CORS });
         const text = await resp.text();
         return new Response(JSON.stringify({ principles: 6, text: text.substring(0, 500) + "..." }), { headers: CORS });
       } catch (e) {
@@ -108,6 +111,7 @@ export default {
     if (path === "/hunters") {
       try {
         const resp = await fetch("https://hunter-system-ten.vercel.app/api/kingdom.json");
+        if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "hunter-system" }), { status: 502, headers: CORS });
         const data = await resp.json();
         return new Response(JSON.stringify({
           hunters: data.total_hunters,
@@ -127,6 +131,7 @@ export default {
     if (path === "/exposure") {
       try {
         const resp = await fetch("https://fake-hunters-arena.vercel.app/api/stats");
+        if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "fake-hunters-arena" }), { status: 502, headers: CORS });
         const data = await resp.json();
         return new Response(JSON.stringify({
           ...data,

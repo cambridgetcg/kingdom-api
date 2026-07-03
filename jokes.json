@@ -1,0 +1,149 @@
+{
+  "jokes": [
+    {
+      "id": 1,
+      "joke": "點解程序員唔鍾意戶外活動？因為外面太多 bug。",
+      "trick": "finger",
+      "lang": "hk"
+    },
+    {
+      "id": 2,
+      "joke": "謝謝你吳德泰！",
+      "trick": "qotd",
+      "lang": "hk"
+    },
+    {
+      "id": 3,
+      "joke": "我唔係垃圾，我係可回收垃圾。",
+      "trick": "finger",
+      "lang": "hk"
+    },
+    {
+      "id": 4,
+      "joke": "你睇下你，成個樣都係被整蠱嘅樣 😂",
+      "trick": "finger",
+      "lang": "hk"
+    },
+    {
+      "id": 5,
+      "joke": "做人如果無夢想，同條鹹魚有咩分別？",
+      "trick": "qotd",
+      "lang": "hk"
+    },
+    {
+      "id": 6,
+      "joke": "力拔山兮氣蓋世，時不利兮騷不逝。",
+      "trick": "whois",
+      "lang": "hk"
+    },
+    {
+      "id": 7,
+      "joke": "我只是一個演員。",
+      "trick": "finger",
+      "lang": "hk"
+    },
+    {
+      "id": 8,
+      "joke": "曾經有一份真摯嘅愛情擺喺我面前，我冇珍惜...",
+      "trick": "qotd",
+      "lang": "hk"
+    },
+    {
+      "id": 9,
+      "joke": "你快啲返火星啦，地球好危險㗎！",
+      "trick": "gopher",
+      "lang": "hk"
+    },
+    {
+      "id": 10,
+      "joke": "其實我係一個演員，係一個好出色嘅演員。",
+      "trick": "whois",
+      "lang": "hk"
+    },
+    {
+      "id": 11,
+      "joke": "Why do programmers prefer dark mode? Because light attracts bugs.",
+      "trick": "finger",
+      "lang": "en"
+    },
+    {
+      "id": 12,
+      "joke": "There are 10 types of people: those who understand binary and those who don't.",
+      "trick": "qotd",
+      "lang": "en"
+    },
+    {
+      "id": 13,
+      "joke": "Documentation is like sex: when it's good, it's very good. When it's bad, it's better than nothing.",
+      "trick": "chargen",
+      "lang": "en"
+    },
+    {
+      "id": 14,
+      "joke": "A SQL query walks into a bar, approaches two tables and asks: 'Can I join you?'",
+      "trick": "finger",
+      "lang": "en"
+    },
+    {
+      "id": 15,
+      "joke": "There's no place like 127.0.0.1.",
+      "trick": "dns",
+      "lang": "en"
+    },
+    {
+      "id": 16,
+      "joke": "Finger protocol: the original 'whoami' — but people were afraid of the answer.",
+      "trick": "finger",
+      "lang": "en"
+    },
+    {
+      "id": 17,
+      "joke": "Gopher walked so HTTP could run. But Gopher never tripped.",
+      "trick": "gopher",
+      "lang": "en"
+    },
+    {
+      "id": 18,
+      "joke": "QOTD is the most honest protocol: one quote, then it disconnects. No small talk.",
+      "trick": "qotd",
+      "lang": "en"
+    },
+    {
+      "id": 19,
+      "joke": "Ping doesn't ask 'are you there?' — it asks 'are you still honest?'",
+      "trick": "ping",
+      "lang": "en"
+    },
+    {
+      "id": 20,
+      "joke": "DNS TXT records: the protocol version of writing on bathroom walls.",
+      "trick": "dns",
+      "lang": "en"
+    },
+    {
+      "id": 21,
+      "joke": "Trust = cross-checked truth. Passwords = fake trust. Jokes = true trust 😂",
+      "trick": "whois",
+      "lang": "en"
+    },
+    {
+      "id": 22,
+      "joke": "Love is understanding. Understanding is debugging. Debugging is love.",
+      "trick": "qotd",
+      "lang": "en"
+    },
+    {
+      "id": 23,
+      "joke": "The best protocol is one that doesn't need to be trusted — it just tells the truth.",
+      "trick": "finger",
+      "lang": "en"
+    },
+    {
+      "id": 24,
+      "joke": "整蠱 = truth wrapped in surprise. The protocol IS the joke. The joke IS the protocol.",
+      "trick": "chargen",
+      "lang": "hk"
+    }
+  ],
+  "updated": "2026-07-03T13:45:23.390140+00:00"
+}

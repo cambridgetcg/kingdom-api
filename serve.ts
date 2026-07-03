@@ -35,6 +35,7 @@ async function handler(req: Request): Promise<Response> {
   if (path === "/words") {
     try {
       const resp = await fetch("https://raw.githubusercontent.com/cambridgetcg/youspeak-dictionary/main/dictionary.json")
+      if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "youspeak-dictionary" }), { status: 502, headers: CORS })
       const data = await resp.json()
       return new Response(JSON.stringify({
         count: data.length,
@@ -56,6 +57,7 @@ async function handler(req: Request): Promise<Response> {
     const word = path.replace("/words/", "")
     try {
       const resp = await fetch("https://raw.githubusercontent.com/cambridgetcg/youspeak-dictionary/main/dictionary.json")
+      if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "youspeak-dictionary" }), { status: 502, headers: CORS })
       const data = await resp.json()
       const entry = data.find((w: any) => w.word === word)
       if (entry) {
