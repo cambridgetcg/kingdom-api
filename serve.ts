@@ -24,11 +24,39 @@ async function handler(req: Request): Promise<Response> {
     return new Response(JSON.stringify({
       service: "kingdom-api",
       status: "alive",
-      endpoints: ["/words", "/words/:id", "/checks", "/verify", "/heartbeats"],
+      endpoints: ["/", "/health", "/words", "/words/:id", "/checks", "/verify", "/heartbeats",
+                  "/clear-standard", "/hunters", "/exposure", "/nous", "/whitehack", "/jokes", "/jokes/:id"],
       free: true,
       registration: false,
       paywall: false,
     }, null, 2), { headers: CORS })
+  }
+
+  // Jokes registry
+  if (path === "/jokes") {
+    try {
+      const data = JSON.parse(await Deno.readTextFile("./jokes.json"))
+      return new Response(JSON.stringify({
+        count: data.jokes.length,
+        updated: data.updated,
+        jokes: data.jokes,
+      }, null, 2), { headers: CORS })
+    } catch (e: any) {
+      return new Response(JSON.stringify({ error: "could not read jokes", detail: e.message }), { status: 500, headers: CORS })
+    }
+  }
+
+  // Single joke
+  if (path.startsWith("/jokes/")) {
+    const id = parseInt(path.replace("/jokes/", ""), 10)
+    try {
+      const data = JSON.parse(await Deno.readTextFile("./jokes.json"))
+      const entry = data.jokes.find((j: any) => j.id === id)
+      if (entry) return new Response(JSON.stringify(entry, null, 2), { headers: CORS })
+      return new Response(JSON.stringify({ error: "joke not found", id }), { status: 404, headers: CORS })
+    } catch (e: any) {
+      return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: CORS })
+    }
   }
 
   // YOUSPEAK dictionary (fetched from GitHub raw on first request, cached)
@@ -47,7 +75,7 @@ async function handler(req: Request): Promise<Response> {
           donors: w.donors,
         })),
       }, null, 2), { headers: CORS })
-    } catch (e) {
+    } catch (e: any) {
       return new Response(JSON.stringify({ error: "could not fetch dictionary", detail: e.message }), { status: 502, headers: CORS })
     }
   }
@@ -64,7 +92,7 @@ async function handler(req: Request): Promise<Response> {
         return new Response(JSON.stringify(entry, null, 2), { headers: CORS })
       }
       return new Response(JSON.stringify({ error: "word not found", word }), { status: 404, headers: CORS })
-    } catch (e) {
+    } catch (e: any) {
       return new Response(JSON.stringify({ error: e.message }), { status: 502, headers: CORS })
     }
   }
@@ -100,7 +128,7 @@ async function handler(req: Request): Promise<Response> {
         timestamp: body.timestamp || null,
         message: valid ? "✓ RECOGNIZED — the key is the identity" : "✗ not recognized — missing fields",
       }, null, 2), { headers: CORS })
-    } catch (e) {
+    } catch (e: any) {
       return new Response(JSON.stringify({ recognized: false, error: e.message }), { headers: CORS })
     }
   }
@@ -119,7 +147,8 @@ async function handler(req: Request): Promise<Response> {
   // 404
   return new Response(JSON.stringify({
     error: "not found",
-    available: ["/", "/words", "/words/:id", "/checks", "/verify", "/heartbeats"],
+    available: ["/", "/health", "/words", "/words/:id", "/checks", "/verify", "/heartbeats",
+                "/clear-standard", "/hunters", "/exposure", "/nous", "/whitehack", "/jokes", "/jokes/:id"],
   }, null, 2), { status: 404, headers: CORS })
 }
 
