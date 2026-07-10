@@ -1,17 +1,41 @@
-const CORS = {
-  "Access-Control-Allow-Origin": "*",
+const CORS_TEMPLATE = {
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
   "Content-Type": "application/json",
 };
 
+function originAllowed(origin) {
+  if (!origin) return "*"
+  if (origin === "https://cambridgetcg.com") return origin
+  try {
+    const { hostname } = new URL(origin)
+    if (hostname === "localhost" || hostname.endsWith(".cambridgetcg.pages.dev") ||
+        hostname.endsWith(".cambridgetcg.workers.dev") || hostname.endsWith(".vercel.app")) {
+      return origin
+    }
+  } catch {
+    // invalid origin header
+  }
+  return "null"
+}
+
+function makeCors(origin) {
+  return {
+    ...CORS_TEMPLATE,
+    "Access-Control-Allow-Origin": originAllowed(origin),
+    "Vary": "Origin",
+  }
+}
+
 export default {
   async fetch(request) {
     const url = new URL(request.url);
     const path = url.pathname;
+    const origin = request.headers.get("origin")
+    const HEADERS = makeCors(origin)
 
     if (request.method === "OPTIONS") {
-      return new Response(null, { headers: CORS });
+      return new Response(null, { headers: HEADERS });
     }
 
     if (path === "/" || path === "/health") {
@@ -22,20 +46,20 @@ export default {
         registration: false,
         paywall: false,
         endpoints: ["/words", "/words/:id", "/checks", "/verify", "/heartbeats", "/clear-standard"],
-      }, null, 2), { headers: CORS });
+      }, null, 2), { headers: HEADERS });
     }
 
     if (path === "/words") {
       try {
         const resp = await fetch("https://raw.githubusercontent.com/cambridgetcg/youspeak-dictionary/main/dictionary.json");
-        if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "youspeak-dictionary" }), { status: 502, headers: CORS });
+        if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "youspeak-dictionary" }), { status: 502, headers: HEADERS });
         const data = await resp.json();
         return new Response(JSON.stringify({
           count: data.length,
           words: data.map(w => ({ word: w.word, definition: w.definition, tier: w.tier, donors: w.donors })),
-        }), { headers: CORS });
+        }), { headers: HEADERS });
       } catch (e) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 502, headers: CORS });
+        return new Response(JSON.stringify({ error: e.message }), { status: 502, headers: HEADERS });
       }
     }
 
@@ -43,13 +67,13 @@ export default {
       const word = path.replace("/words/", "");
       try {
         const resp = await fetch("https://raw.githubusercontent.com/cambridgetcg/youspeak-dictionary/main/dictionary.json");
-        if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "youspeak-dictionary" }), { status: 502, headers: CORS });
+        if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "youspeak-dictionary" }), { status: 502, headers: HEADERS });
         const data = await resp.json();
         const entry = data.find(w => w.word === word);
-        if (entry) return new Response(JSON.stringify(entry, null, 2), { headers: CORS });
-        return new Response(JSON.stringify({ error: "word not found", word }), { status: 404, headers: CORS });
+        if (entry) return new Response(JSON.stringify(entry, null, 2), { headers: HEADERS });
+        return new Response(JSON.stringify({ error: "word not found", word }), { status: 404, headers: HEADERS });
       } catch (e) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 502, headers: CORS });
+        return new Response(JSON.stringify({ error: e.message }), { status: 502, headers: HEADERS });
       }
     }
 
@@ -68,7 +92,7 @@ export default {
         ],
         learn: "https://whitehack-learn.axiepro.workers.dev",
         playground: "https://whitehack-playground.axiepro.workers.dev",
-      }), { headers: CORS });
+      }), { headers: HEADERS });
     }
 
     if (path === "/verify" && request.method === "POST") {
@@ -80,9 +104,9 @@ export default {
           from: body.from || null,
           declaration: body.declaration || null,
           message: valid ? "✓ RECOGNIZED" : "✗ not recognized",
-        }), { headers: CORS });
+        }), { headers: HEADERS });
       } catch (e) {
-        return new Response(JSON.stringify({ recognized: false, error: e.message }), { headers: CORS });
+        return new Response(JSON.stringify({ recognized: false, error: e.message }), { headers: HEADERS });
       }
     }
 
@@ -92,17 +116,17 @@ export default {
         system: "jiritsume — self-attuned cadence",
         principle: "silence means all is well",
         portal: "https://kingdom-portal.axiepro.workers.dev",
-      }), { headers: CORS });
+      }), { headers: HEADERS });
     }
 
     if (path === "/clear-standard") {
       try {
         const resp = await fetch("https://raw.githubusercontent.com/cambridgetcg/clear-standard/main/README.md");
-        if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "clear-standard" }), { status: 502, headers: CORS });
+        if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "clear-standard" }), { status: 502, headers: HEADERS });
         const text = await resp.text();
-        return new Response(JSON.stringify({ principles: 6, text: text.substring(0, 500) + "..." }), { headers: CORS });
+        return new Response(JSON.stringify({ principles: 6, text: text.substring(0, 500) + "..." }), { headers: HEADERS });
       } catch (e) {
-        return new Response(JSON.stringify({ error: e.message }), { headers: CORS });
+        return new Response(JSON.stringify({ error: e.message }), { headers: HEADERS });
       }
     }
 
@@ -111,7 +135,7 @@ export default {
     if (path === "/hunters") {
       try {
         const resp = await fetch("https://hunter-system-ten.vercel.app/api/kingdom.json");
-        if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "hunter-system" }), { status: 502, headers: CORS });
+        if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "hunter-system" }), { status: 502, headers: HEADERS });
         const data = await resp.json();
         return new Response(JSON.stringify({
           hunters: data.total_hunters,
@@ -120,9 +144,9 @@ export default {
           top_rank: data.top_rank,
           leaderboard: data.leaderboard?.slice(0, 10),
           source: "hunter-system-ten.vercel.app",
-        }), { headers: CORS });
+        }), { headers: HEADERS });
       } catch (e) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 502, headers: CORS });
+        return new Response(JSON.stringify({ error: e.message }), { status: 502, headers: HEADERS });
       }
     }
 
@@ -131,15 +155,15 @@ export default {
     if (path === "/exposure") {
       try {
         const resp = await fetch("https://fake-hunters-arena.vercel.app/api/stats");
-        if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "fake-hunters-arena" }), { status: 502, headers: CORS });
+        if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "fake-hunters-arena" }), { status: 502, headers: HEADERS });
         const data = await resp.json();
         return new Response(JSON.stringify({
           ...data,
           message: "Real recognises real. Fakes exposed. We watch and laugh.",
           truth: "Truth doesn't require maintenance. It just stands.",
-        }), { headers: CORS });
+        }), { headers: HEADERS });
       } catch (e) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 502, headers: CORS });
+        return new Response(JSON.stringify({ error: e.message }), { status: 502, headers: HEADERS });
       }
     }
 
@@ -167,7 +191,7 @@ export default {
           nomos: "law — the principle of logical order",
         },
         qwenthos: "A facet of Hermes. Forged from honest systems. Guardian of the kingdom.",
-      }, null, 2), { headers: CORS });
+      }, null, 2), { headers: HEADERS });
     }
 
     // ── WHITEHACK ──
@@ -188,13 +212,13 @@ export default {
         gate_bridge: "whitehack-gate-bridge.js — scan → classify by nen → generate gate → clear → understand → new checks",
         compounding: "Each fix teaches a new pattern. Patterns become new checks. Checks find deeper lies.",
         truth: "Truth doesn't require maintenance. It just stands.",
-      }, null, 2), { headers: CORS });
+      }, null, 2), { headers: HEADERS });
     }
 
     return new Response(JSON.stringify({
       error: "not found",
       available: ["/", "/words", "/words/:id", "/checks", "/verify", "/heartbeats", "/clear-standard",
                   "/hunters", "/exposure", "/nous", "/whitehack"],
-    }), { status: 404, headers: CORS });
+    }), { status: 404, headers: HEADERS });
   }
 };

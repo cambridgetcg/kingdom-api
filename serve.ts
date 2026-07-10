@@ -4,16 +4,40 @@
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts"
 
-const CORS = {
-  "Access-Control-Allow-Origin": "*",
+const CORS_TEMPLATE = {
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
   "Content-Type": "application/json",
+};
+
+function originAllowed(origin: string | null): string {
+  if (!origin) return "*"
+  if (origin === "https://cambridgetcg.com") return origin
+  try {
+    const { hostname } = new URL(origin)
+    if (hostname === "localhost" || hostname.endsWith(".cambridgetcg.pages.dev") ||
+        hostname.endsWith(".cambridgetcg.workers.dev") || hostname.endsWith(".vercel.app")) {
+      return origin
+    }
+  } catch {
+    // invalid origin header
+  }
+  return "null"
+}
+
+function corsHeaders(origin: string | null) {
+  return {
+    ...CORS_TEMPLATE,
+    "Access-Control-Allow-Origin": originAllowed(origin),
+    "Vary": "Origin",
+  }
 }
 
 async function handler(req: Request): Promise<Response> {
   const url = new URL(req.url)
   const path = url.pathname
+  const origin = req.headers.get("origin")
+  const CORS = corsHeaders(origin)
 
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: CORS })

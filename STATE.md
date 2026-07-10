@@ -7,12 +7,15 @@ kind: project
 language: TypeScript (Deno + Cloudflare Worker)
 runs-on: Cloudflare Workers (deployed) / local Deno for dev
 
+doctest: |
+  - whitehack scan now returns 0 findings on CORS wildcard
+
 ## state
 phase: active
 health: green
 last-commit: 6b1153a feat: kingdom-api — one free API for the internet rewrite
-uncommitted: 1 file (README.md updated in this quest)
-freshness: 2026-07-09T13:37:00Z
+uncommitted: 2 files (serve.ts + worker.js CORS fix in this quest)
+freshness: 2026-07-10T02:00:00Z
 
 ## knows
 - YOUSPEAK dictionary upstream (cambridgetcg/youspeak-dictionary)
