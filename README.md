@@ -13,10 +13,12 @@ Free API for the internet rewrite. Serves:
 
 Two implementations: `serve.ts` (Deno) and `worker.js` (Cloudflare Worker). The worker is the deployed surface.
 
-## KINGDOM Telegram bot (isolated, not deployed)
+## KINGDOM Telegram bot (isolated Worker)
 
 `telegram-worker.mjs` is a separate, stateless Cloudflare Worker configured by
 `telegram-wrangler.toml`. It does not import or modify the production API Worker.
+The Worker code is deployed at `https://kingdom-telegram.axiepro.workers.dev`;
+connecting a Telegram bot remains a separate credentialed step.
 Telegram calls only the exact, query-free `POST /webhook`; `GET /health` and
 `HEAD /health` are the only other routes.
 
@@ -62,11 +64,11 @@ a temporary directory:
 wrangler deploy --dry-run --outdir "$(mktemp -d)" --config telegram-wrangler.toml
 ```
 
-### Later setup (explicit opt-in)
+### Telegram connection (credentialed opt-in)
 
-After an authorized deployment, bind the webhook secret to the Telegram Worker
-and, if group suffixes are wanted, bind its username. Do not put the bot token in
-the Worker configuration:
+For Telegram delivery, bind the webhook secret to the Worker and, if group
+suffixes are wanted, bind its username. Do not put the bot token in the Worker
+configuration:
 
 ```sh
 # Generate a strong value using only Telegram's accepted alphabet:
