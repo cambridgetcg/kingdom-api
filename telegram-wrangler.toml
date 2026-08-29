@@ -1,0 +1,3 @@
+name = "kingdom-telegram"
+compatibility_date = "2026-08-28"
+main = "telegram-worker.mjs"
