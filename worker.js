@@ -121,7 +121,7 @@ export default {
 
     if (path === "/clear-standard") {
       try {
-        const resp = await fetch("https://raw.githubusercontent.com/cambridgetcg/clear-standard/main/README.md");
+        const resp = await fetch("https://raw.githubusercontent.com/cambridgetcg/clear-standard/master/README.md");
         if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "clear-standard" }), { status: 502, headers: HEADERS });
         const text = await resp.text();
         return new Response(JSON.stringify({ principles: 6, text: text.substring(0, 500) + "..." }), { headers: HEADERS });
