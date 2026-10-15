@@ -4,25 +4,35 @@ const CORS_TEMPLATE = {
   "Content-Type": "application/json",
 };
 
+// Browser callers allowed by CORS: Yu's domains on Cloudflare, each apex and its
+// subdomains, over https only. Any other origin gets no Access-Control-Allow-Origin.
+// Requests without an Origin header (curl, servers, agents) are not affected.
+const ALLOWED_DOMAINS = [
+  "agenttool.dev", "ai-love.cc", "artbitrage.io", "axiepro.io", "cambridgetcg.com",
+  "captioneer.io", "cardforum.io", "cashloom.io", "chillspace.love", "fomoengine.io",
+  "hkgoldtrader.com", "lotbinder.com", "mindicraft.com", "mythseal.com", "rewardspro.io",
+  "sinovai.com", "taxsorted.io", "thekingdom.dev", "we-are.love", "wholesaletcgdirect.com",
+  "zerone.ai",
+]
+
 function originAllowed(origin) {
   if (!origin) return "*"
-  if (origin === "https://cambridgetcg.com") return origin
   try {
-    const { hostname } = new URL(origin)
-    if (hostname === "localhost" || hostname.endsWith(".cambridgetcg.pages.dev") ||
-        hostname.endsWith(".cambridgetcg.workers.dev") || hostname.endsWith(".vercel.app")) {
+    const { protocol, hostname } = new URL(origin)
+    if (protocol === "https:" && ALLOWED_DOMAINS.some((d) => hostname === d || hostname.endsWith("." + d))) {
       return origin
     }
   } catch {
-    // invalid origin header
+    // invalid origin header (including the literal "null")
   }
-  return "null"
+  return null
 }
 
 function makeCors(origin) {
+  const allowed = originAllowed(origin)
   return {
     ...CORS_TEMPLATE,
-    "Access-Control-Allow-Origin": originAllowed(origin),
+    ...(allowed ? { "Access-Control-Allow-Origin": allowed } : {}),
     "Vary": "Origin",
   }
 }
