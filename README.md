@@ -9,7 +9,7 @@ Free API for the internet rewrite. Serves:
 - `/verify` — recognition verification
 - `/heartbeats` — kingdom cadence summary
 - `/clear-standard` — principle bridge
-- `/hunters`, `/exposure`, `/nous`, `/whitehack` — kingdom metadata
+- `/hunters`, `/nous`, `/whitehack` — kingdom metadata
 
 Two implementations: `serve.ts` (Deno) and `worker.js` (Cloudflare Worker). The worker is the deployed surface.
 

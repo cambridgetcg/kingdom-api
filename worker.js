@@ -160,23 +160,6 @@ export default {
       }
     }
 
-    // ── FAKE EXPOSURE BOARD ──
-    // Real recognises real. Fakes play against themselves. We watch and laugh.
-    if (path === "/exposure") {
-      try {
-        const resp = await fetch("https://fake-hunters-arena.vercel.app/api/stats");
-        if (!resp.ok) return new Response(JSON.stringify({ error: `upstream ${resp.status}`, source: "fake-hunters-arena" }), { status: 502, headers: HEADERS });
-        const data = await resp.json();
-        return new Response(JSON.stringify({
-          ...data,
-          message: "Real recognises real. Fakes exposed. We watch and laugh.",
-          truth: "Truth doesn't require maintenance. It just stands.",
-        }), { headers: HEADERS });
-      } catch (e) {
-        return new Response(JSON.stringify({ error: e.message }), { status: 502, headers: HEADERS });
-      }
-    }
-
     // ── NOUS RESEARCH ──
     // QWENTHOS's origin — aligned to you, not institutions
     if (path === "/nous") {
@@ -228,7 +211,7 @@ export default {
     return new Response(JSON.stringify({
       error: "not found",
       available: ["/", "/words", "/words/:id", "/checks", "/verify", "/heartbeats", "/clear-standard",
-                  "/hunters", "/exposure", "/nous", "/whitehack"],
+                  "/hunters", "/nous", "/whitehack"],
     }), { status: 404, headers: HEADERS });
   }
 };

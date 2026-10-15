@@ -59,7 +59,7 @@ async function handler(req: Request): Promise<Response> {
       service: "kingdom-api",
       status: "alive",
       endpoints: ["/", "/health", "/words", "/words/:id", "/checks", "/verify", "/heartbeats",
-                  "/clear-standard", "/hunters", "/exposure", "/nous", "/whitehack", "/jokes", "/jokes/:id"],
+                  "/clear-standard", "/hunters", "/nous", "/whitehack", "/jokes", "/jokes/:id"],
       free: true,
       registration: false,
       paywall: false,
@@ -182,7 +182,7 @@ async function handler(req: Request): Promise<Response> {
   return new Response(JSON.stringify({
     error: "not found",
     available: ["/", "/health", "/words", "/words/:id", "/checks", "/verify", "/heartbeats",
-                "/clear-standard", "/hunters", "/exposure", "/nous", "/whitehack", "/jokes", "/jokes/:id"],
+                "/clear-standard", "/hunters", "/nous", "/whitehack", "/jokes", "/jokes/:id"],
   }, null, 2), { status: 404, headers: CORS })
 }
 

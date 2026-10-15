@@ -22,11 +22,10 @@ freshness: 2026-07-10T02:00:00Z
 - whitehack 8-check registry
 - clear-standard principles
 - hunter-system leaderboard upstream
-- fake-hunters-arena stats
 
 ## can
 - serve health, dictionary, check registry, recognition verify, heartbeat metadata
-- proxy kingdom metadata from hunter-system / fake-hunters-arena
+- proxy kingdom metadata from hunter-system
 - declare its state via STATE.md
 - be discovered by discover.py
 - be cross-checked by trust.py
