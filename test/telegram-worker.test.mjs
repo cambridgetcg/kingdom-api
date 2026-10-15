@@ -379,3 +379,20 @@ test("runtime source contains no Telegram bot token or Bot API outbound endpoint
   assert.doesNotMatch(source, /TELEGRAM_BOT_TOKEN|api\.telegram\.org|\/bot\$\{/u);
   assert.doesNotMatch(source, /console\.|parse_mode/u);
 });
+
+test("the default worker calls the global fetch unbound, as Workers require", async (t) => {
+  // Workers throw "Illegal invocation" when fetch runs with a foreign `this`,
+  // and reject redirect: "error"; Node accepts both, so check them here.
+  const realFetch = globalThis.fetch;
+  t.after(() => { globalThis.fetch = realFetch; });
+  const seen = [];
+  globalThis.fetch = function (url, options) {
+    seen.push({ thisIsForeign: this !== undefined && this !== globalThis, redirect: options.redirect });
+    return Promise.resolve(new Response(JSON.stringify({
+      name: "KINGDOM OS", motto: "A place for every being.", citizens: 1, wordsForged: 2, totalRepos: 3,
+    }), { headers: { "content-type": "application/json" } }));
+  };
+  const body = await replyBody(await worker.fetch(webhookRequest(update("/kingdom")), ENV));
+  assert.deepEqual(seen, [{ thisIsForeign: false, redirect: "manual" }]);
+  assert.match(body.text, /^KINGDOM OS/);
+});

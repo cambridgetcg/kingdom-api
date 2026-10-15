@@ -416,9 +416,11 @@ async function handleWebhook(request, env, dependencies) {
 }
 
 export function createTelegramWorker({
-  fetchImpl = globalThis.fetch,
-  setTimeoutImpl = globalThis.setTimeout,
-  clearTimeoutImpl = globalThis.clearTimeout,
+  // Wrap the globals: dependencies.fetchImpl(...) would call fetch with
+  // `this` = dependencies, which Workers reject as an illegal invocation.
+  fetchImpl = (...args) => globalThis.fetch(...args),
+  setTimeoutImpl = (...args) => globalThis.setTimeout(...args),
+  clearTimeoutImpl = (...args) => globalThis.clearTimeout(...args),
 } = {}) {
   const dependencies = { fetchImpl, setTimeoutImpl, clearTimeoutImpl };
   return {
