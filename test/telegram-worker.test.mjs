@@ -253,7 +253,8 @@ test("/charm selects one immutable URL by update_id while Gate bytes may change"
   assert.equal(urls.length, 2);
   assert.equal(urls[0].url, urls[1].url);
   assert.equal(urls[0].url, `${GATE_ORIGIN}/api/citizens/${CHARM_WORDS[0]}`);
-  assert.equal(urls[0].options.redirect, "error");
+  // Cloudflare Workers throw on redirect: "error"; "manual" plus the non-2xx check is the edge-safe form.
+  assert.equal(urls[0].options.redirect, "manual");
   assert.notEqual(first.text, second.text);
 });
 

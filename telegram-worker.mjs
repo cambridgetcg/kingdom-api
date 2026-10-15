@@ -322,7 +322,9 @@ async function fetchGateJson(path, dependencies) {
     const response = await dependencies.fetchImpl(url, {
       method: "GET",
       headers: { Accept: "application/json" },
-      redirect: "error",
+      // Workers reject redirect: "error" with a TypeError, so take redirects
+      // manually; a 3xx is not ok and fails below like any other non-2xx.
+      redirect: "manual",
       signal: controller.signal,
     });
     if (!response.ok || response.redirected || (response.url && response.url !== url)) return null;

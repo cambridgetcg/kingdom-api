@@ -1,3 +1,6 @@
 name = "kingdom-telegram"
 compatibility_date = "2026-08-28"
 main = "telegram-worker.mjs"
+# Match live: workers.dev on (Telegram calls /webhook there), preview URLs off.
+workers_dev = true
+preview_urls = false
